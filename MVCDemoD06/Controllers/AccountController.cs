@@ -54,6 +54,17 @@ namespace MVCDemoD06.Controllers
                 return View(registerVM);
             }
 
+            // Add Default Role to the newly registered user
+            IdentityResult AddRoleResult = await _userManager.AddToRoleAsync(applicationUser, SystemRoles.Admin);
+            if(!AddRoleResult.Succeeded)
+            {
+                foreach (var error in AddRoleResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View(registerVM);
+            }
+
             return RedirectToAction("Login");
         }
         /*------------------------------------------------------------------*/
